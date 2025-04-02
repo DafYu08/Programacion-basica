@@ -1,0 +1,115 @@
+# include <iostream>
+#include <math.h>
+#include <vector>
+
+int f1 ( int x ){
+    return x +1;
+}
+int f2 (int x, int y){
+    return x + y;
+}
+int f3 (int x, int y){
+    int res;
+    if(x>y){
+        res = x+y;
+    }else{
+        res = x*y;
+    }
+    return res;
+}
+bool esPrimo(int x){
+    bool res = true;
+    if (x<2){
+        res = false;
+    } else{
+        for (int i = 2; i < sqrt(x); i++) {
+            if (x % i == 0){
+                res = false;
+            }
+        }
+    }
+    return res;
+}
+int fibonacci(int n){
+    int res;
+    if(n==0||n==1){
+        res = n;
+    } else {
+        res = fibonacci(n-1) + fibonacci(n-2);
+    }
+    return (res);
+}
+int sumaImparesMenoresQueNRecursiva (int n){  //corregir
+    int res;
+    if (n<0){
+        res = -1;
+    } else if (n==1 || n==2){
+        res = 1;
+    } else if (n%2 == 0){
+        res = n - 1 + sumaImparesMenoresQueNRecursiva(n-2);
+    } else if (n%2 == 1){
+        res = n - 2 + sumaImparesMenoresQueNRecursiva(n-2);
+    }
+    return res;
+}
+int sumaImparesMenoresQueNIterativa (int n){
+    int suma = 0;
+    for (int i = 1; i < n; i+=2) {
+        suma += i;
+    }
+    return suma;
+}
+int divisoresHasta (int n){
+    int res = 1;
+    for (int i = n; i > 0; i--){
+        if ((n+1)%i == 0){
+            res = i;
+            i = 0;
+        }
+    }
+    return res;
+}
+int sumaDivisoresNRecursiva (int n){ //CORREGIR!!
+    int suma = 0;
+    n = abs(n);
+    if (n == 1) {
+        return 1;
+    }else if (n > 1) {
+        suma = n + divisoresHasta(n-1);
+    }
+    return suma;
+}
+
+int sumaDivisioresNIterativa (int n){
+    int suma = 0;
+    for (int i = 1; i <= n; ++i) {
+        if (n%i == 0){
+            suma+= i;
+        }
+    }
+    return suma;
+}
+int numCombinatorio (int n, int m){
+    int res;
+    if (m == 0 || m == n){
+        res = 1;
+    }else{
+        res = numCombinatorio(n-1,m) + numCombinatorio(n-1, m-1);
+    }
+    return res;
+}
+
+int main () {
+    std :: cout << " El resultado es : " << f1 (10) << std :: endl ;
+    std :: cout << " El resultado es : " << f2 (10, 9) << std :: endl ;
+    std :: cout << " El resultado es : " << f3 (10, 9) << std :: endl ;
+    std :: cout << " Es primo?: " << esPrimo (59) << std :: endl;
+    std :: cout << " El n-ésimo número de fibonacci es: " << fibonacci(3) << std :: endl;
+    std :: cout << " Suma impares menores que n por recursión: " << sumaImparesMenoresQueNRecursiva(9) << std :: endl;
+    std :: cout << " Suma impares menores que n por iteración: " << sumaImparesMenoresQueNIterativa(7) << std :: endl;
+    std :: cout << " Suma divisores hasta n por recursión: " << sumaDivisoresNRecursiva(12) << std :: endl;
+    std :: cout << " Suma divisores hasta n por iteración: " << sumaDivisioresNIterativa(12) << std :: endl;
+    std :: cout << " Número combinatorio por recursión: " << numCombinatorio(12,7) << std :: endl;
+    //PARA LA VERSIÓN ITERATIVA DEL EJERCICIO 8 ENCONTRÉ: http://di002.edv.uniovi.es/~jotero/indtec20062007/ejemplos_funciones.pdf
+    return 0;
+}

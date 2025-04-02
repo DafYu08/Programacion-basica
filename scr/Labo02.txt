@@ -1,0 +1,150 @@
+#include <iostream>
+#include <math.h>
+#include <vector>
+
+using namespace std;
+
+//SUMAS Y PROMEDIOS
+void sumaYPromedio(){
+    int cantEst;
+    cout<< "Hola, ingrese la cantidad de estudiantes: "<<endl;
+    cin >> cantEst;
+    while (cantEst < 6){
+        cout << "La cantidad de estudiantes debe ser mayor o igual a 6"<<endl;
+        cin >> cantEst;
+    }
+    float suma = 0;
+    float prom = 0;
+    int estAprob = 0;
+    int estDesap = 0;
+    for (int i = 0; i < cantEst; i++) {
+        float x;
+        cout<<"Ingrese una calificación: "<<endl;
+        cin>> x;
+        if (0<x && x<=10) {
+            suma += x;
+            prom += x / cantEst;
+            if (x>=6){
+                estAprob++;
+            } else {
+                estDesap++;
+            }
+        } else {
+            i--;
+            cout<<"Reingrese el dato anterior"<<endl;
+        }
+    }
+    cout<<"La suma total es: "<< suma<< endl;
+    cout<<"El promedio es: "<< prom<<endl;
+    cout<<"Los estudiantes aprobados son: "<< estAprob << endl;
+    cout<<"Los estudiantes reprobados son: "<< estDesap << endl;
+    if (estDesap*3 < cantEst){
+        cout<< "Se puede incrementar el número de plazas del curso."
+    }
+    
+}
+//CONVERSION A DECIMAL
+int binarioADecimal(int &x){
+    int res = 0;
+   while (x!=0){
+    int i = 0;
+    res =+ x%10 * pow(2,i);
+    x=/10;
+    i++;
+   }
+}
+
+int main () {
+    sumaYPromedio();
+    binarioADecimal(10100);
+    return 0;
+}
+
+//OPERACIONES CIRCUNFERENCIA
+float diametro (float r){
+    return r*2;
+}
+float circ(float r, float pi){
+    return diametro(r)*pi;
+}
+float area(float r, float pi){
+    return pow(r,2)*pi;
+}
+
+int main () {
+    float r;
+    cin>> r;
+    const float pi =3.141592;
+    cout<< "Diámetro: " <<diametro (r)<<endl;
+    cout<< "Circunferencia: " <<circ(r, pi)<<endl;
+    cout<<"Area: "<<area(r, pi)<<endl;
+    return 0;
+}
+//SWAP
+void swap (int &a, int &b){ //pasaje por referencia obligatorio
+    a = a + b;
+    b = a - b;
+    a = a - b;
+}
+
+int main () {
+    int a;
+    int b;
+    cin >> a;
+    cin >> b;
+    swap(a,b);
+    cout << a << " " << b;
+    return 0;
+    
+}
+
+
+//COLLATZ
+void collatz(int &n, int& cantPasos){
+    if (n%2==0){
+        n /= 2;
+    } else{
+        n = 3*n + 1;
+    }
+    cantPasos++;
+    cout<< n <<" ";
+}
+
+int main () {
+    int n;
+    int cantPasos = 0;
+    cout<< "Ingrese un natural: "<<endl;
+    cin>> n;
+    while (n != 1){
+        collatz(n, cantPasos);
+    }
+    cout <<" "<<endl;
+    cout<< "Cantidad total de pasos: "<< cantPasos;
+
+    return 0;
+}
+
+//DIVISION
+void division (int &a, int &b, int &c, int &d){ //pasaje por referencia obligatorio
+    while (a >= b){
+        c++;
+        a = a - b;
+    }
+    d = a%b; 
+        
+}
+
+int main () {
+    int a;
+    int b;
+    int c = 0;
+    int d = 0;
+    cin >> a;
+    cin >> b;
+    division(a,b,c,d);
+    cout << c << " " << d;
+    return 0;
+    
+}
+
+

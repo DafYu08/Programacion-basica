@@ -1,0 +1,217 @@
+[distanciaTotalTEST]
+
+TEST(distanciaTotalTEST, viajeVaYVuelve){
+    gps p1 = puntoGps(-33, -34);
+    gps p2 = desviarPunto(p1, 2000, 0);
+    gps p3 = p1;
+
+    viaje v = {medicion(1.6, p2),
+               medicion(1.5, p1),
+               medicion(1.7, p3)};
+    EXPECT_NEAR(distanciaTotal(v), 4.0, 0.01);
+}
+
+TEST(distanciaTotalTEST, viajeOrdenadoAlReves){
+    gps p1 = puntoGps(-33, -34);
+    gps p2 = desviarPunto(p1, 2000, 0);
+    gps p3 = desviarPunto(p2, 0, 2000);
+    gps p4 = desviarPunto(p3, 3000,4000);
+
+    viaje v = {medicion(10, p4),
+               medicion(8, p3),
+               medicion(7, p2),
+               medicion(4, p1)};
+    EXPECT_NEAR(distanciaTotal(v), 9.0, 0.01);
+}
+
+TEST(distanciaTotalTEST, viajeLargo){
+    gps p1 = puntoGps(-33, -34);
+    gps p2 = desviarPunto(p1, 2000, 0);
+    gps p3 = desviarPunto(p2, 0, 2000);
+    gps p4 = desviarPunto(p3, 3000,4000);
+    gps p5 = desviarPunto(p4, 3000,4000);
+    gps p6 = desviarPunto(p5, 4000,3000);
+    gps p7 = desviarPunto(p6, 3000,4000);
+
+
+    viaje v = {medicion(1, p1),
+               medicion(3, p3),
+               medicion(7, p7),
+               medicion(2, p2),
+               medicion(6, p6),
+               medicion(5, p5),
+               medicion(4, p4)};
+    EXPECT_NEAR(distanciaTotal(v), 24.0, 0.01);
+}
+
+
+[corregirViajeTEST]
+
+TEST(corregirViajeTEST, faltaUno){
+    viaje v = {medicion(T0+0, puntoGps(-34.588910, -58.405075)),
+               medicion(T0+30, puntoGps(-34.591586, -58.401064)),
+               medicion(T0+494, puntoGps(-34.563746, -58.436637)),
+               medicion(T0+999, puntoGps(-34.549657, -58.437327)),
+               medicion(T0+92, puntoGps(0, 0)),
+               medicion(T0+65, puntoGps(-34.590787, -58.402222)),
+               medicion(T0+230, puntoGps(-34.584572, -58.416942)),
+               medicion(T0+873, puntoGps(-34.559236, -58.427499)),
+               medicion(T0+675, puntoGps(-34.578941, -58.424878)),
+               medicion(T0+1051, puntoGps(-34.545486, -58.441061))};
+
+    viaje res = {medicion(T0+0, puntoGps(-34.588910, -58.405075)),
+               medicion(T0+30, puntoGps(-34.591586, -58.401064)),
+               medicion(T0+494, puntoGps(-34.563746, -58.436637)),
+               medicion(T0+999, puntoGps(-34.549657, -58.437327)),
+               medicion(T0+92, puntoGps(-34.590171, -58.403115)),
+               medicion(T0+65, puntoGps(-34.590787, -58.402222)),
+               medicion(T0+230, puntoGps(-34.584572, -58.416942)),
+               medicion(T0+873, puntoGps(-34.559236, -58.427499)),
+               medicion(T0+675, puntoGps(-34.578941, -58.424878)),
+               medicion(T0+1051, puntoGps(-34.545486, -58.441061))};
+
+    vector<tiempo> errores = {T0+92};
+
+    corregirViaje(v, errores);
+    EXPECT_EQ(v.size(),res.size());
+
+    for (int i = 0; i < res.size(); ++i) {
+        EXPECT_NEAR(obtenerLatitud(obtenerPosicion(v[i])),
+                    obtenerLatitud(obtenerPosicion(res[i])), 0.00001);
+        EXPECT_NEAR(obtenerLongitud(obtenerPosicion(v[i])),
+                    obtenerLongitud(obtenerPosicion(res[i])), 0.00001);
+        EXPECT_EQ(obtenerTiempo(v[i]),obtenerTiempo(res[i]));
+    }
+}
+
+TEST(corregirViajeTEST, faltaElUltimo){
+    viaje v = {medicion(T0+0, puntoGps(-34.588910, -58.405075)),
+               medicion(T0+30, puntoGps(-34.591586, -58.401064)),
+               medicion(T0+494, puntoGps(-34.563746, -58.436637)),
+               medicion(T0+999, puntoGps(-34.549657, -58.437327)),
+               medicion(T0+92, puntoGps(-34.594553, -58.402426)),
+               medicion(T0+65, puntoGps(-34.590787, -58.402222)),
+               medicion(T0+230, puntoGps(-34.584572, -58.416942)),
+               medicion(T0+873, puntoGps(-34.559236, -58.427499)),
+               medicion(T0+675, puntoGps(-34.578941, -58.424878)),
+               medicion(T0+1051, puntoGps(0, 0))};
+
+    viaje res = {medicion(T0+0, puntoGps(-34.588910, -58.405075)),
+                 medicion(T0+30, puntoGps(-34.591586, -58.401064)),
+                 medicion(T0+494, puntoGps(-34.563746, -58.436637)),
+                 medicion(T0+999, puntoGps(-34.549657, -58.437327)),
+                 medicion(T0+92, puntoGps(-34.594553, -58.402426)),
+                 medicion(T0+65, puntoGps(-34.590787, -58.402222)),
+                 medicion(T0+230, puntoGps(-34.584572, -58.416942)),
+                 medicion(T0+873, puntoGps(-34.559236, -58.427499)),
+                 medicion(T0+675, puntoGps(-34.578941, -58.424878)),
+                 medicion(T0+1051, puntoGps(-34.545704, -58.441383))};
+    vector<tiempo> errores = {T0+1051};
+
+    corregirViaje(v, errores);
+    EXPECT_EQ(v.size(),res.size());
+
+    for (int i = 0; i < res.size(); ++i) {
+        EXPECT_NEAR(obtenerLatitud(obtenerPosicion(v[i])),
+                    obtenerLatitud(obtenerPosicion(res[i])), 0.00001);
+        EXPECT_NEAR(obtenerLongitud(obtenerPosicion(v[i])),
+                    obtenerLongitud(obtenerPosicion(res[i])), 0.00001);
+        EXPECT_EQ(obtenerTiempo(v[i]),obtenerTiempo(res[i]));
+    }
+}
+
+TEST(corregirViajeTEST, faltaDosSeguidos){
+    viaje v = {medicion(T0+0, puntoGps(-34.588910, -58.405075)),
+               medicion(T0+30, puntoGps(-34.591586, -58.401064)),
+               medicion(T0+494, puntoGps(-34.578941, -58.424878)),
+               medicion(T0+999, puntoGps(0, 0)),
+               medicion(T0+92, puntoGps(-34.594553, -58.402426)),
+               medicion(T0+65, puntoGps(-34.590787, -58.402222)),
+               medicion(T0+230, puntoGps(-34.584572, -58.416942)),
+               medicion(T0+873, puntoGps(0, 0)),
+               medicion(T0+675, puntoGps(-34.563746, -58.436637)),
+               medicion(T0+1051, puntoGps(-34.545486, -58.441061))};
+
+    viaje res = {medicion(T0+0, puntoGps(-34.588910, -58.405075)),
+               medicion(T0+30, puntoGps(-34.591586, -58.401064)),
+               medicion(T0+494, puntoGps(-34.578941, -58.424878)),
+               medicion(T0+999, puntoGps(-34.548011, -58.440449)),
+               medicion(T0+92, puntoGps(-34.594553, -58.402426)),
+               medicion(T0+65, puntoGps(-34.590787, -58.402222)),
+               medicion(T0+230, puntoGps(-34.584572, -58.416942)),
+               medicion(T0+873, puntoGps(-34.554130, -58.438967)),
+               medicion(T0+675, puntoGps(-34.563746, -58.436637)),
+               medicion(T0+1051, puntoGps(-34.545486, -58.441061))};
+
+    vector<tiempo> errores = {T0+999,T0+873};
+
+    corregirViaje(v, errores);
+    EXPECT_EQ(v.size(),res.size());
+
+    for (int i = 0; i < res.size(); ++i) {
+        EXPECT_NEAR(obtenerLatitud(obtenerPosicion(v[i])),
+                    obtenerLatitud(obtenerPosicion(res[i])), 0.00001);
+        EXPECT_NEAR(obtenerLongitud(obtenerPosicion(v[i])),
+                    obtenerLongitud(obtenerPosicion(res[i])), 0.00001);
+        EXPECT_EQ(obtenerTiempo(v[i]),obtenerTiempo(res[i]));
+    }
+}
+
+
+[cantidadDeSaltosTEST]
+
+TEST(cantidadDeSaltosTEST, movimientoDiagonalNoProduceSaltos){
+    grilla g = construirGrilla(puntoGps(0.0,0.0),desviarPunto(puntoGps(0.0,0.0), 3000, 3000),3,3);
+
+    gps p1 = puntoGps(0, 0);
+    gps p2 = desviarPunto(p1, 1000, 1000);
+    gps p3 = desviarPunto(p1, 2000, 2000);
+
+    viaje v = {medicion(1.5, p1),
+               medicion(1.6, p2),
+               medicion(1.7, p3)};
+
+    EXPECT_EQ(cantidadDeSaltos(g,v),0);
+}
+
+TEST(cantidadDeSaltosTEST, algunosSaltosOrdenados){
+    grilla g = construirGrilla(puntoGps(0.0,0.0),desviarPunto(puntoGps(0,0), 3000, 3000),3,3);
+
+    gps p1 = puntoGps(0, 0);
+    gps p2 = desviarPunto(p1, 2500, 2500);
+    gps p3 = desviarPunto(p1, 1200, 1200);
+
+    viaje v = {medicion(1.5, p1),
+               medicion(1.6, p2),
+               medicion(1.7, p3)};
+
+    EXPECT_EQ(cantidadDeSaltos(g,v),1);
+}
+
+TEST(cantidadDeSaltosTEST, ningunSaltoDesordenados){
+    grilla g = construirGrilla(puntoGps(0.0,0.0),desviarPunto(puntoGps(0,0), 3000, 3000),3,3);
+
+    gps p1 = puntoGps(0, 0);
+    gps p2 = desviarPunto(p1, 1000, 0);
+    gps p3 = desviarPunto(p1, 1000, 1000);
+
+    viaje v = {medicion(1.6, p2),
+               medicion(1.5, p1),
+               medicion(1.7, p3)};
+
+    EXPECT_EQ(cantidadDeSaltos(g,v),0);
+}
+
+TEST(cantidadDeSaltosTEST, algunosSaltosDesordenados){
+    grilla g = construirGrilla(puntoGps(0.0,0.0),desviarPunto(puntoGps(0,0), 3000, 3000),6,6);
+
+    gps p1 = puntoGps(0, 0);
+    gps p2 = desviarPunto(p1, 2900, 2900);
+    gps p3 = desviarPunto(p1, 1000, 1000);
+
+    viaje v = {medicion(1.6, p3),
+               medicion(1.5, p1),
+               medicion(1.7, p2)};
+
+    EXPECT_EQ(cantidadDeSaltos(g,v),1);
+}

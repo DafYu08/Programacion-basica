@@ -1,0 +1,22 @@
+Corrector: Fermín Schlottmann
+Calificación: Reentrega
+
+Deben corregir su código para que pasen todos los tests fallidos del enunciado, del grupo y aquellos incluidos en el archivo "Tests fallidos de la catedra.txt".
+
+[Tests del enunciado]
+
+	Resultados: ver "Informe tests enunciado.html".
+
+[Tests del grupo]
+	
+	Resultados: ver "Informe tests grupo.html".
+
+	Cobertura: Ok.
+
+	construirGrillaTEST: solo chequean la dimensión de la grilla; falta verificar los contenidos.
+
+[Tests de la catedra]
+	
+	Resultados: ver "Informe tests catedra.html".
+
+	No implementaron la función sonGrillasIguales, que era parte del enunciado actualizado. Deben implementarla.
